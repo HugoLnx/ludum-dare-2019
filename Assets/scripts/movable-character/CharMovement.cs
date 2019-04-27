@@ -8,13 +8,13 @@ public class CharMovement : MonoBehaviour
     private const float SNAP_SPEED = 5f;
     private const float WALK_SPEED = 5f;
     private const float MOVEMENT_COMMITMENT_PERCENT = 0.2f; // Commited to the movement after 20% of it being completed 
-    private const float CELL_PROXIMITY_PERCENT = 0.05f; // If it is 5% further from the cell middle, it is on that middle
+    private const float CELL_PROXIMITY_PERCENT = 0.25f; // If it is 5% further from the cell middle, it is on that middle
 
     private Animator animator;
     private Grid grid;
     private Nullable<Direction> movingDirection;
     private Vector2Int cell;
-    private bool Walking { get { return this.movingDirection.HasValue; } }
+    public bool Walking { get { return this.movingDirection.HasValue; } }
     private Vector2 Position {
         get { return new Vector2(this.transform.position.x, this.transform.position.y); }
         set { this.transform.position = new Vector3(value.x, value.y); }
@@ -46,22 +46,21 @@ public class CharMovement : MonoBehaviour
         { Direction.RIGHT, Vector3.right },
         { Direction.LEFT, Vector3.left }
     };
+    public bool instantSnap = false;
+    public int Steps { get; private set; }
 
     void Awake()
     {
         this.animator = GetComponentInChildren<Animator>();
         this.grid = GetComponentInParent<Grid>();
+        this.cell = this.grid.GetCellToSnap(this.transform.position);
+        InstantSnapTo(this.cell);
     }
-
-    void Start()
-    {
-        Snap(Motion.NONE);
-    }
-
+    
     void Update()
     {
         var closeToCellCenter = UpdateCell();
-        if (closeToCellCenter && this.commitedToMovement)
+        if (!Snapping && closeToCellCenter && this.commitedToMovement)
         {
             this.commitedToMovement = false;
 
@@ -81,7 +80,6 @@ public class CharMovement : MonoBehaviour
             var missingToNextCell = nextCellPosition - Position;
             if (missingToNextCell.magnitude / this.grid.cellSize < 1f - MOVEMENT_COMMITMENT_PERCENT)
             {
-                Debug.Log("commited!!!! " + missingToNextCell.magnitude.ToString());
                 this.commitedToMovement = true;
             }
         }
@@ -91,6 +89,7 @@ public class CharMovement : MonoBehaviour
     {
         if (this.commitedToMovement || this.Snapping || (this.movingDirection.HasValue && this.movingDirection.Value == direction)) return;
         if (GetMotion(direction) != CurrentMotion) Snap(CurrentMotion);
+        this.Steps = 0;
         this.scheduledStop = false;
         this.movingDirection = direction;
         this.animator.SetTrigger($"walk-{DIRECTION_NAMES[direction]}");
@@ -104,6 +103,7 @@ public class CharMovement : MonoBehaviour
             this.scheduledStop = true;
             return;
         }
+        this.Steps = 0;
 
         this.scheduledStop = false;
         var originalMotion = CurrentMotion;
@@ -114,8 +114,14 @@ public class CharMovement : MonoBehaviour
     
     private void Snap(Motion originalMotion)
     {
-        this.cell = this.grid.GetCellToSnap(this.transform.position);
-        StartCoroutine(AnimatedSnap(this.cell, originalMotion));
+        if (instantSnap)
+        {
+            InstantSnapTo(this.cell);
+        }
+        else
+        {
+            StartCoroutine(AnimatedSnap(this.cell, originalMotion));
+        }
     }
 
     private void InstantSnapTo(Vector2Int cell)
@@ -139,6 +145,7 @@ public class CharMovement : MonoBehaviour
             yield return new WaitForSeconds(0f);
             if (originalMotion == this.CurrentMotion) break;
         }
+        this.cell = this.grid.GetCellToSnap(this.transform.position);
         this.Snapping = false;
     }
 
@@ -161,8 +168,13 @@ public class CharMovement : MonoBehaviour
         
         if (distanceToCenter <= this.grid.cellSize * CELL_PROXIMITY_PERCENT)
         {
-            this.cell = this.grid.GetCellToSnap(this.transform.position);
-            return true;
+            var cell = this.grid.GetCellToSnap(this.transform.position);
+            if (!cell.Equals(this.cell))
+            {
+                this.Steps++;
+                this.cell = cell;
+                return true;
+            }
         }
         return false;
     }

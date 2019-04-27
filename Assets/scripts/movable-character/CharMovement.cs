@@ -6,13 +6,14 @@ using System;
 public class CharMovement : MonoBehaviour
 {
     private const float SNAP_SPEED = 5f;
-    private const float WALK_SPEED = 5f;
+    public float WalkSpeed { get; set; }
     private const float MOVEMENT_COMMITMENT_PERCENT = 0.2f; // Commited to the movement after 20% of it being completed 
     private const float CELL_PROXIMITY_PERCENT = 0.25f; // If it is 5% further from the cell middle, it is on that middle
 
     private Animator animator;
     private Grid grid;
     private Nullable<Direction> movingDirection;
+    public Nullable<Direction> CurrentDirection { get { return movingDirection; } }
     private Vector2Int cell;
     public bool Walking { get { return this.movingDirection.HasValue; } }
     private Vector2 Position {
@@ -29,6 +30,7 @@ public class CharMovement : MonoBehaviour
     private bool scheduledStop;
 
     public bool Snapping { get; private set; }
+    public Vector2Int Cell { get { return this.cell; } }
 
     public enum Direction { UP, DOWN, RIGHT, LEFT }
     private enum Motion { HORIZONTAL, VERTICAL, NONE }
@@ -51,6 +53,7 @@ public class CharMovement : MonoBehaviour
 
     void Awake()
     {
+        this.WalkSpeed = 5f;
         this.animator = GetComponentInChildren<Animator>();
         this.grid = GetComponentInParent<Grid>();
         this.cell = this.grid.GetCellToSnap(this.transform.position);
@@ -74,7 +77,7 @@ public class CharMovement : MonoBehaviour
         if (this.movingDirection.HasValue)
         {
             var vector = DIRECTION_VECTORS[this.movingDirection.Value];
-            this.transform.position += vector * WALK_SPEED * Time.deltaTime;
+            this.transform.position += vector * WalkSpeed * Time.deltaTime;
             var normalizedInt = new Vector2Int(Mathf.RoundToInt(vector.x), Mathf.RoundToInt(vector.y));
             var nextCellPosition = this.grid.GetCellPosition(this.cell + normalizedInt);
             var missingToNextCell = nextCellPosition - Position;

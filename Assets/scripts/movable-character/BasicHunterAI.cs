@@ -6,6 +6,7 @@ using static CharMovement.Direction;
 public class BasicHunterAI : MonoBehaviour
 {
     private CharMovement hunter;
+    public ObjectScent witchScent;
 
     void Awake()
     {
@@ -14,24 +15,22 @@ public class BasicHunterAI : MonoBehaviour
 
     void Start()
     {
-        StartCoroutine(StartAI());
+        this.hunter.WalkSpeed = 2.5f;
+        StartCoroutine(FollowScent(witchScent));
     }
 
-    private IEnumerator StartAI()
+    private IEnumerator FollowScent(ObjectScent scent)
     {
 
         while (true)
         {
-            this.hunter.Move(RIGHT);
-            yield return new WaitUntil(() => this.hunter.Steps >= 5);
-            this.hunter.Move(LEFT);
-            yield return new WaitUntil(() => this.hunter.Steps >= 5);
-            //this.hunter.Step(RIGHT);
-            //yield return new WaitWhile(() => this.hunter.Walking);
-            //this.hunter.Step(LEFT);
-            //yield return new WaitWhile(() => this.hunter.Walking);
-            //this.hunter.Step(LEFT);
-            //yield return new WaitWhile(() => this.hunter.Walking);
+            var scentDirection = scent.GetDirectionToFollow(hunter.Cell);
+            if (!this.hunter.CurrentDirection.HasValue || scentDirection != this.hunter.CurrentDirection.Value)
+            {
+                this.hunter.Move(scentDirection);
+            }
+            var steps = this.hunter.Steps;
+            yield return new WaitWhile(() => steps == this.hunter.Steps);
         }
     }
 }

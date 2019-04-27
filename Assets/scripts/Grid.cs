@@ -7,16 +7,20 @@ public class Grid : MonoBehaviour
     private const int GRID_SIZE = 50;
     public float cellSize;
     public GridLine linePrefab;
+    public bool debug;
 
     void Start()
     {
-        var offset = -(cellSize / 2f + GRID_SIZE / 2 * cellSize);
-        for (var i = 0; i < GRID_SIZE; i++)
+        if (this.debug)
         {
-            var verticalLine = GameObject.Instantiate(linePrefab);
-            verticalLine.SetVertical(transform.position.y + offset + i * cellSize);
-            var horizontalLine = GameObject.Instantiate(linePrefab);
-            horizontalLine.SetHorizontal(transform.position.x + offset + i * cellSize);
+            var offset = -(cellSize / 2f + GRID_SIZE / 2 * cellSize);
+            for (var i = 0; i < GRID_SIZE; i++)
+            {
+                var verticalLine = GameObject.Instantiate(linePrefab);
+                verticalLine.SetVertical(transform.position.y + offset + i * cellSize);
+                var horizontalLine = GameObject.Instantiate(linePrefab);
+                horizontalLine.SetHorizontal(transform.position.x + offset + i * cellSize);
+            }
         }
     }
 

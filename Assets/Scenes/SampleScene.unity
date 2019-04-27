@@ -338,6 +338,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7b96da3601b5764bb54864c9bec7414, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  witchScent: {fileID: 1783959569}
 --- !u!114 &958096220
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -383,6 +384,7 @@ MonoBehaviour:
   cellSize: 0.73333335
   linePrefab: {fileID: 7970090490891245955, guid: 44d6e7b1a8300bd4fbfef6c6b79951fe,
     type: 3}
+  debug: 0
 --- !u!4 &1423901769
 Transform:
   m_ObjectHideFlags: 0
@@ -396,9 +398,56 @@ Transform:
   m_Children:
   - {fileID: 958096218}
   - {fileID: 1783959566}
+  - {fileID: 1758413585}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1758413584
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1758413585}
+  - component: {fileID: 1758413586}
+  m_Layer: 0
+  m_Name: scent-grid
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &1758413585
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1758413584}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1423901769}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1758413586
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1758413584}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9252870f16e677f46a3fa665785696e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scent: {fileID: 1783959569}
+  indicatorPrefab: {fileID: 6690403862047919945, guid: b186f32bf0ec68947b100b8b94bbd89a,
+    type: 3}
 --- !u!1 &1783959565
 GameObject:
   m_ObjectHideFlags: 0
@@ -410,6 +459,7 @@ GameObject:
   - component: {fileID: 1783959566}
   - component: {fileID: 1783959568}
   - component: {fileID: 1783959567}
+  - component: {fileID: 1783959569}
   m_Layer: 0
   m_Name: witch
   m_TagString: Untagged
@@ -457,6 +507,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   instantSnap: 0
+--- !u!114 &1783959569
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1783959565}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91300cc51e12fd243a68b9d91ae76297, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spread: 25
 --- !u!1 &1811301024
 GameObject:
   m_ObjectHideFlags: 0

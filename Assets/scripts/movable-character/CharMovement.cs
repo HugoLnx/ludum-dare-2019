@@ -175,11 +175,11 @@ public class CharMovement : MonoBehaviour
 
     public void Move(Direction direction)
     {
-        //if (IsBlockedTorwards(direction))
-        //{
-        //    this.MovementBlocked = true;
-        //    return;
-        //}
+        if (IsBlockedTorwards(direction))
+        {
+            this.MovementBlocked = true;
+            return;
+        }
         if (this.commitedToMovement || this.Snapping || (this.movingDirection.HasValue && this.movingDirection.Value == direction)) return;
         if (GetMotion(direction) != CurrentMotion) Snap(CurrentMotion);
 

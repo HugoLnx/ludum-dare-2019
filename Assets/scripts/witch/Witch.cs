@@ -8,7 +8,9 @@ public class Witch : MonoBehaviour
     public static string TAG = "witch";
     private CharMovement movement;
     private bool carryingChild;
-    public int Score { get; private set; }
+    private int score;
+    public int Score { get { return score; } private set { this.score = value < 0 ? 0 : value; } }
+    public PlayerHUD hud;
 
     void Awake()
     {
@@ -18,7 +20,8 @@ public class Witch : MonoBehaviour
 
     public void Dead()
     {
-        Debug.Log("dead");
+        this.Score -= 731;
+        this.hud.SetScore(this.Score);
     }
 
     void OnTriggerEnter2D(Collider2D collision)
@@ -41,6 +44,7 @@ public class Witch : MonoBehaviour
         {
             this.carryingChild = false;
             this.Score += 1000;
+            this.hud.SetScore(this.Score);
         }
     }
 }

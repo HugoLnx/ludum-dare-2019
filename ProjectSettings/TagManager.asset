@@ -3,7 +3,10 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - witch
+  - hunter
+  - child
   layers:
   - Default
   - TransparentFX
@@ -40,4 +43,13 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: BlockingObjects
+    uniqueID: 171988459
+    locked: 0
+  - name: Chars
+    uniqueID: 635131361
+    locked: 0
+  - name: Projectiles
+    uniqueID: 747830065
     locked: 0

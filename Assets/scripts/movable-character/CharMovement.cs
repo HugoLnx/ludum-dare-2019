@@ -14,6 +14,7 @@ public class CharMovement : MonoBehaviour
     private Grid grid;
     private Nullable<Direction> movingDirection;
     public Nullable<Direction> CurrentDirection { get { return movingDirection; } }
+    public Direction HeadedDirection { get; private set; }
     private Vector2Int cell;
     public bool Walking { get { return this.movingDirection.HasValue; } }
     private Vector2 Position {
@@ -31,8 +32,10 @@ public class CharMovement : MonoBehaviour
 
     public bool Snapping { get; private set; }
     public Vector2Int Cell { get { return this.cell; } }
+    public bool instantSnap = false;
 
     public enum Direction { UP, DOWN, RIGHT, LEFT }
+    private static readonly Direction[] DIRECTIONS = new Direction[] { Direction.UP, Direction.DOWN, Direction.RIGHT, Direction.LEFT };
     private enum Motion { HORIZONTAL, VERTICAL, NONE }
     private readonly Dictionary<Direction, string> DIRECTION_NAMES = new Dictionary<Direction, string>
     {
@@ -41,25 +44,52 @@ public class CharMovement : MonoBehaviour
         { Direction.RIGHT, "right" },
         { Direction.LEFT, "left" }
     };
-    private readonly Dictionary<Direction, Vector3> DIRECTION_VECTORS = new Dictionary<Direction, Vector3>
+    private static readonly Dictionary<Direction, Vector3> DIRECTION_VECTORS = new Dictionary<Direction, Vector3>
     {
         { Direction.UP, Vector3.up },
         { Direction.DOWN, Vector3.down },
         { Direction.RIGHT, Vector3.right },
         { Direction.LEFT, Vector3.left }
     };
-    public bool instantSnap = false;
+
+    public Direction? Sees(Vector2Int cell, int raid)
+    {
+        if ((cell - this.cell).magnitude > raid) return null;
+        if (cell.x == this.cell.x)
+        {
+            return cell.y > this.cell.y ? Direction.UP : Direction.DOWN;
+        }
+        if (cell.y == this.cell.y)
+        {
+            return cell.x > this.cell.x ? Direction.RIGHT : Direction.LEFT;
+        }
+        return null;
+    }
+
+    public bool Hear(Vector2Int cell, int raid)
+    {
+        return (cell - this.cell).magnitude <= raid;
+    }
+
+
+    public static Direction RandomDirection()
+    {
+        var inx = UnityEngine.Random.Range(0, DIRECTIONS.Length - 1);
+        return DIRECTIONS[inx];
+    }
+
     public int Steps { get; private set; }
 
     void Awake()
     {
+        this.HeadedDirection = Direction.DOWN;
         this.WalkSpeed = 5f;
         this.animator = GetComponentInChildren<Animator>();
         this.grid = GetComponentInParent<Grid>();
         this.cell = this.grid.GetCellToSnap(this.transform.position);
         InstantSnapTo(this.cell);
     }
-    
+
     void Update()
     {
         var closeToCellCenter = UpdateCell();
@@ -76,7 +106,7 @@ public class CharMovement : MonoBehaviour
         }
         if (this.movingDirection.HasValue)
         {
-            var vector = DIRECTION_VECTORS[this.movingDirection.Value];
+            var vector = CharMovement.GetDirectionVector(this.movingDirection.Value);
             this.transform.position += vector * WalkSpeed * Time.deltaTime;
             var normalizedInt = new Vector2Int(Mathf.RoundToInt(vector.x), Mathf.RoundToInt(vector.y));
             var nextCellPosition = this.grid.GetCellPosition(this.cell + normalizedInt);
@@ -88,14 +118,34 @@ public class CharMovement : MonoBehaviour
         }
     }
 
+    public static Vector3 GetDirectionVector(Direction direction)
+    {
+        return DIRECTION_VECTORS[direction];
+    }
+
     public void Move(Direction direction)
     {
         if (this.commitedToMovement || this.Snapping || (this.movingDirection.HasValue && this.movingDirection.Value == direction)) return;
         if (GetMotion(direction) != CurrentMotion) Snap(CurrentMotion);
+        this.animator.SetBool("is-idle", false);
         this.Steps = 0;
         this.scheduledStop = false;
         this.movingDirection = direction;
+        this.HeadedDirection = direction;
         this.animator.SetTrigger($"walk-{DIRECTION_NAMES[direction]}");
+    }
+
+    public void TurnTo(Direction direction)
+    {
+        Stop();
+        this.HeadedDirection = direction;
+        StartCoroutine(PostponeTurnTo(direction));
+
+    }
+    private IEnumerator PostponeTurnTo(Direction direction)
+    {
+        yield return new WaitForFixedUpdate();
+        this.animator.SetTrigger($"turn-to-{DIRECTION_NAMES[direction]}");
     }
 
     public void Stop()
@@ -107,6 +157,7 @@ public class CharMovement : MonoBehaviour
             return;
         }
         this.Steps = 0;
+        this.animator.SetBool("is-idle", true);
 
         this.scheduledStop = false;
         var originalMotion = CurrentMotion;

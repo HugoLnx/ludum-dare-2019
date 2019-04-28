@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class WalkingGrid : MonoBehaviour
 {
@@ -8,6 +10,7 @@ public class WalkingGrid : MonoBehaviour
     public float cellSize;
     public GridLine linePrefab;
     public bool debug;
+    private List<BlockingObject> blockingObjects = new List<BlockingObject>();
 
     void Start()
     {
@@ -22,6 +25,28 @@ public class WalkingGrid : MonoBehaviour
                 horizontalLine.SetHorizontal(transform.position.x + offset + i * cellSize);
             }
         }
+    }
+
+    public void AddBlockingObject(BlockingObject blockingObject)
+    {
+        this.blockingObjects.Add(blockingObject);
+    }
+
+    public void RemoveBlockingObject(BlockingObject blockingObject)
+    {
+        this.blockingObjects.Remove(blockingObject);
+    }
+
+    public bool IsBlocked(Vector2Int cell)
+    {
+        return this.blockingObjects.Any(o => o.Cell.Equals(cell));
+    }
+
+    public bool[] UnblockedDirections(Vector2Int cell)
+    {
+        return CharMovement.DIRECTIONS.Select(
+            direction => IsBlocked(cell + CharMovement.GetDirectionVector2D(direction)))
+            .ToArray();
     }
 
     public Vector2 GetCellPosition(Vector2Int cell)

@@ -40,15 +40,15 @@ public class BasicHunterAI : MonoBehaviour
             {
                 case State.CHASING_WITCH:
                     StepFollowing(witchScent);
-                    yield return new WaitWhile(() => steps == this.hunterMovement.Steps);
+                    yield return new WaitWhile(() => steps == this.hunterMovement.Steps && !this.hunterMovement.MovementBlocked);
                     break;
                 case State.CHASING_CAULDRON:
                     StepFollowing(cauldronScent);
-                    yield return new WaitWhile(() => steps == this.hunterMovement.Steps);
+                    yield return new WaitWhile(() => steps == this.hunterMovement.Steps && !this.hunterMovement.MovementBlocked);
                     break;
                 case State.SEARCHING_RANDOMLY:
                     StepRandomly();
-                    yield return new WaitWhile(() => steps == this.hunterMovement.Steps);
+                    yield return new WaitWhile(() => steps == this.hunterMovement.Steps && !this.hunterMovement.MovementBlocked);
                     break;
                 case State.SHOOTING:
                     this.hunterMovement.TurnTo(this.witchShotDirection);

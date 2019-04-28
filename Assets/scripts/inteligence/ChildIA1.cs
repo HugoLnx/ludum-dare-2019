@@ -25,7 +25,7 @@ public class ChildIA1 : MonoBehaviour
                 var direction = CharMovement.RandomDirection();
                 var steps = this.child.Steps;
                 this.child.Move(direction);
-                yield return new WaitWhile(() => steps == this.child.Steps);
+                yield return new WaitWhile(() => steps == this.child.Steps && !this.child.MovementBlocked);
             }
             this.child.Stop();
             yield return new WaitForSeconds(3f);

@@ -95,10 +95,11 @@ public class ObjectScent : MonoBehaviour
             && Mathf.Abs(cell.x) <= spread / 2
             && Mathf.Abs(cell.y) <= spread / 2
             && this.scent[coords.x, coords.y] <= 0
-            && !this.alreadyEnqueded[coords.x, coords.y]) {
+            && !this.alreadyEnqueded[coords.x, coords.y]
+            && !this.grid.IsBlocked(cell+this.CurrentCell.Value)) {
             visitQueue.Enqueue((steps, cell));
-            this.alreadyEnqueded[coords.x, coords.y] = true;
         }
+        this.alreadyEnqueded[coords.x, coords.y] = true;
     }
 
     private void InitScent()

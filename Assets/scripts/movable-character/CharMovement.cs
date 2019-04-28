@@ -35,7 +35,7 @@ public class CharMovement : MonoBehaviour
     public bool instantSnap = false;
 
     public enum Direction { UP, DOWN, RIGHT, LEFT }
-    private static readonly Direction[] DIRECTIONS = new Direction[] { Direction.UP, Direction.DOWN, Direction.RIGHT, Direction.LEFT };
+    public static readonly Direction[] DIRECTIONS = new Direction[] { Direction.UP, Direction.DOWN, Direction.RIGHT, Direction.LEFT };
     private enum Motion { HORIZONTAL, VERTICAL, NONE }
     private readonly Dictionary<Direction, string> DIRECTION_NAMES = new Dictionary<Direction, string>
     {
@@ -57,10 +57,47 @@ public class CharMovement : MonoBehaviour
         if ((cell - this.cell).magnitude > raid) return null;
         if (cell.x == this.cell.x)
         {
+            int minY, maxY;
+
+            if (cell.y < this.cell.y)
+            {
+                minY = cell.y;
+                maxY = this.cell.y;
+            } else
+            {
+                minY = this.cell.y;
+                maxY = cell.y;
+            }
+            for (var y = minY; y <= maxY; y++)
+            {
+                if (this.grid.IsBlocked(new Vector2Int(cell.x, y)))
+                {
+                    return null;
+                }
+            }
             return cell.y > this.cell.y ? Direction.UP : Direction.DOWN;
         }
         if (cell.y == this.cell.y)
         {
+            int minX, maxX;
+
+            if (cell.x < this.cell.x)
+            {
+                minX = cell.x;
+                maxX = this.cell.x;
+            }
+            else
+            {
+                minX = this.cell.x;
+                maxX = cell.x;
+            }
+            for (var x = minX; x <= maxX; x++)
+            {
+                if (this.grid.IsBlocked(new Vector2Int(x, cell.y)))
+                {
+                    return null;
+                }
+            }
             return cell.x > this.cell.x ? Direction.RIGHT : Direction.LEFT;
         }
         return null;
@@ -79,6 +116,7 @@ public class CharMovement : MonoBehaviour
     }
 
     public int Steps { get; private set; }
+    public bool MovementBlocked { get; private set; }
 
     void Awake()
     {
@@ -106,6 +144,12 @@ public class CharMovement : MonoBehaviour
         }
         if (this.movingDirection.HasValue)
         {
+            if (closeToCellCenter && IsBlockedTorwards(this.movingDirection))
+            {
+                Stop();
+                this.MovementBlocked = true;
+                return;
+            }
             var vector = CharMovement.GetDirectionVector(this.movingDirection.Value);
             this.transform.position += vector * WalkSpeed * Time.deltaTime;
             var normalizedInt = new Vector2Int(Mathf.RoundToInt(vector.x), Mathf.RoundToInt(vector.y));
@@ -123,12 +167,25 @@ public class CharMovement : MonoBehaviour
         return DIRECTION_VECTORS[direction];
     }
 
+    public static Vector2Int GetDirectionVector2D(Direction direction)
+    {
+        var v3 = GetDirectionVector(direction);
+        return new Vector2Int(Mathf.RoundToInt(v3.x), Mathf.RoundToInt(v3.y));
+    }
+
     public void Move(Direction direction)
     {
+        //if (IsBlockedTorwards(direction))
+        //{
+        //    this.MovementBlocked = true;
+        //    return;
+        //}
         if (this.commitedToMovement || this.Snapping || (this.movingDirection.HasValue && this.movingDirection.Value == direction)) return;
         if (GetMotion(direction) != CurrentMotion) Snap(CurrentMotion);
+
         this.animator.SetBool("is-idle", false);
         this.Steps = 0;
+        this.MovementBlocked = false;
         this.scheduledStop = false;
         this.movingDirection = direction;
         this.HeadedDirection = direction;
@@ -162,6 +219,7 @@ public class CharMovement : MonoBehaviour
         this.scheduledStop = false;
         var originalMotion = CurrentMotion;
         this.movingDirection = null;
+        this.MovementBlocked = false;
         this.animator.SetTrigger("idle");
         Snap(originalMotion);
     }
@@ -231,5 +289,12 @@ public class CharMovement : MonoBehaviour
             }
         }
         return false;
+    }
+
+    private bool IsBlockedTorwards(Direction? direction)
+    {
+        var nextCell = this.Cell + CharMovement.GetDirectionVector2D(direction.Value);
+        var isBlocked = direction.HasValue && this.grid.IsBlocked(nextCell);
+        return isBlocked;
     }
 }

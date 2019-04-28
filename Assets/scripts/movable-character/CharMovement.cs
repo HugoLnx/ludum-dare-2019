@@ -19,7 +19,7 @@ public class CharMovement : MonoBehaviour
     public bool Walking { get { return this.movingDirection.HasValue; } }
     private Vector2 Position {
         get { return new Vector2(this.transform.position.x, this.transform.position.y); }
-        set { this.transform.position = new Vector3(value.x, value.y); }
+        set { this.transform.position = new Vector3(value.x, value.y, this.transform.position.z); }
     }
     private Vector2 CellPosition
     {
@@ -31,7 +31,7 @@ public class CharMovement : MonoBehaviour
     private bool scheduledStop;
 
     public bool Snapping { get; private set; }
-    public Vector2Int Cell { get { return this.cell; } }
+    public Vector2Int Cell { get { return this.cell; } set { this.cell = value; } }
     public bool instantSnap = false;
 
     public enum Direction { UP, DOWN, RIGHT, LEFT }
@@ -238,7 +238,8 @@ public class CharMovement : MonoBehaviour
 
     private void InstantSnapTo(Vector2Int cell)
     {
-        this.transform.position = this.grid.GetCellPosition(cell);
+        var v2 = this.grid.GetCellPosition(cell);
+        this.transform.position = new Vector3(v2.x, v2.y, this.transform.position.z);
         this.cell = cell;
     }
 
@@ -285,6 +286,8 @@ public class CharMovement : MonoBehaviour
             {
                 this.Steps++;
                 this.cell = cell;
+                var p = this.transform.position;
+                this.transform.position = new Vector3(p.x, p.y, 100 + cell.y);
                 return true;
             }
         }

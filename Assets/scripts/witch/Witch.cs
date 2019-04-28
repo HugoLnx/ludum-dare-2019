@@ -15,7 +15,7 @@ public class Witch : MonoBehaviour
     void Awake()
     {
         this.movement = GetComponent<CharMovement>();
-        this.movement.WalkSpeed = 2.5f;
+        this.movement.WalkSpeed = 4f;
     }
 
     public void Dead()

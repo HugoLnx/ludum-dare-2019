@@ -13,6 +13,12 @@ public class BlockingObject : MonoBehaviour
         this.transform.position = this.grid.GetCellPosition(this.Cell);
     }
 
+    void Update()
+    {
+        var p = this.transform.position;
+        this.transform.position = new Vector3(p.x, p.y, 100 + this.Cell.y);
+    }
+
     void OnEnable()
     {
         this.grid.AddBlockingObject(this);

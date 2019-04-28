@@ -8,6 +8,7 @@ TagManager:
   - hunter
   - child
   - block
+  - cauldron
   layers:
   - Default
   - TransparentFX

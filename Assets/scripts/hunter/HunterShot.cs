@@ -7,9 +7,9 @@ public class HunterShot : MonoBehaviour
 {
     private const float SPEED = 5f;
     private Direction direction;
-    private Grid grid;
+    private WalkingGrid grid;
 
-    public void Setup(Grid grid, Vector2Int cell, Direction direction)
+    public void Setup(WalkingGrid grid, Vector2Int cell, Direction direction)
     {
         this.direction = direction;
         this.grid = grid;

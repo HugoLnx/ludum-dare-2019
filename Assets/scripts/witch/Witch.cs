@@ -6,13 +6,13 @@ using UnityEngine;
 public class Witch : MonoBehaviour
 {
     public static string TAG = "witch";
-    // Start is called before the first frame update
-    void Start()
+    private CharMovement movement;
+    void Awake()
     {
-        
+        this.movement = GetComponent<CharMovement>();
+        this.movement.WalkSpeed = 2.5f;
     }
-
-    // Update is called once per frame
+    
     void Update()
     {
         

@@ -8,7 +8,7 @@ public class ObjectScent : MonoBehaviour
     public int spread;
     private int[,] scent;
     private Nullable<Vector2Int> currentCell = null;
-    private Grid grid;
+    private WalkingGrid grid;
     private Vector2Int center;
     private bool[,] alreadyEnqueded;
     private int countCalls;
@@ -18,7 +18,7 @@ public class ObjectScent : MonoBehaviour
     void Awake()
     {
         this.scent = new int[spread+10,spread+10];
-        this.grid = GetComponentInParent<Grid>();
+        this.grid = GetComponentInParent<WalkingGrid>();
         this.center = new Vector2Int(spread / 2 + 5, spread / 2 + 5); var position = new Vector2(this.transform.position.x, this.transform.position.y);
         this.currentCell = this.grid.GetCellToSnap(position);
     }

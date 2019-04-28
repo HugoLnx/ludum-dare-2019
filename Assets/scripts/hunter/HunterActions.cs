@@ -7,12 +7,12 @@ public class HunterActions : MonoBehaviour
     public HunterShot prefabShot;
     private SpriteRenderer srenderer;
     private CharMovement movement;
-    private Grid grid;
+    private WalkingGrid grid;
 
     void Awake()
     {
         this.srenderer = GetComponentInChildren<SpriteRenderer>();
-        this.grid = GetComponentInParent<Grid>();
+        this.grid = GetComponentInParent<WalkingGrid>();
         this.movement = GetComponent<CharMovement>();
     }
 

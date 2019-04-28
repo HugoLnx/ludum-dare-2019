@@ -11,7 +11,7 @@ public class CharMovement : MonoBehaviour
     private const float CELL_PROXIMITY_PERCENT = 0.25f; // If it is 5% further from the cell middle, it is on that middle
 
     private Animator animator;
-    private Grid grid;
+    private WalkingGrid grid;
     private Nullable<Direction> movingDirection;
     public Nullable<Direction> CurrentDirection { get { return movingDirection; } }
     public Direction HeadedDirection { get; private set; }
@@ -85,7 +85,7 @@ public class CharMovement : MonoBehaviour
         this.HeadedDirection = Direction.DOWN;
         this.WalkSpeed = 5f;
         this.animator = GetComponentInChildren<Animator>();
-        this.grid = GetComponentInParent<Grid>();
+        this.grid = GetComponentInParent<WalkingGrid>();
         this.cell = this.grid.GetCellToSnap(this.transform.position);
         InstantSnapTo(this.cell);
     }

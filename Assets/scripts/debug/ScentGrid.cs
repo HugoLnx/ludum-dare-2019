@@ -9,11 +9,11 @@ public class ScentGrid : MonoBehaviour
     public ObjectScent scent;
     public ScentIndicator indicatorPrefab;
     private Nullable<Vector2Int> scentOrigin = null;
-    private Grid grid;
+    private WalkingGrid grid;
 
     void Start()
     {
-        this.grid = GetComponentInParent<Grid>();
+        this.grid = GetComponentInParent<WalkingGrid>();
         for(var x = -scent.spread/2; x < scent.spread/2; x++)
         {
             for(var y = -scent.spread/2; y < scent.spread/2; y++)

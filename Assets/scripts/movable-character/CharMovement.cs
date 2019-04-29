@@ -8,7 +8,7 @@ public class CharMovement : MonoBehaviour
     private const float SNAP_SPEED = 5f;
     public float WalkSpeed { get; set; }
     private const float MOVEMENT_COMMITMENT_PERCENT = 0.2f; // Commited to the movement after 20% of it being completed 
-    private const float CELL_PROXIMITY_PERCENT = 0.25f; // If it is 5% further from the cell middle, it is on that middle
+    private const float CELL_PROXIMITY_PERCENT = 0.15f; // If it is 5% further from the cell middle, it is on that middle
 
     private Animator animator;
     private WalkingGrid grid;
@@ -108,11 +108,19 @@ public class CharMovement : MonoBehaviour
         return (cell - this.cell).magnitude <= raid;
     }
 
-
-    public static Direction RandomDirection()
+    public static Direction RandomDirection(Direction except)
     {
-        var inx = UnityEngine.Random.Range(0, DIRECTIONS.Length - 1);
-        return DIRECTIONS[inx];
+        var s = new HashSet<Direction>();
+        s.Add(except);
+        return RandomDirection(s);
+    }
+
+    public static Direction RandomDirection(ISet<Direction> except = null)
+    {
+        var dirs = new List<Direction>(DIRECTIONS);
+        if (except != null) dirs.RemoveAll(d => except.Contains(d));
+        var inx = UnityEngine.Random.Range(0, dirs.Count);
+        return dirs[inx];
     }
 
     public int Steps { get; private set; }

@@ -7865,13 +7865,14 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1105861480}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bda02176c6f2ce44a8722a1c8f3f349c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 8544847101119605683, guid: 1d35a28cdaf4fd2479234b4a5bf314ef, type: 3}
   delay: 4
+  firstSpawnDelay: 0
 --- !u!114 &1105861483
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7886,6 +7887,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: 4043597059086477362, guid: 74019f803be08f1468ddf9f62f8ab714, type: 3}
   delay: 30
+  firstSpawnDelay: 10
 --- !u!1001 &1116544469
 PrefabInstance:
   m_ObjectHideFlags: 0

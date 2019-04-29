@@ -76,7 +76,8 @@ public class BasicHunterAI : MonoBehaviour
 
     private void StepRandomly()
     {
-        this.hunterMovement.Move(CharMovement.RandomDirection());
+        var direction = CharMovement.RandomDirection(except: this.grid.BlockedDirections(this.hunterMovement.Cell));
+        this.hunterMovement.Move(direction);
     }
 
 

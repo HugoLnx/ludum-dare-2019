@@ -57,6 +57,13 @@ public class WalkingGrid : MonoBehaviour
             .ToArray();
     }
 
+    public ISet<CharMovement.Direction> BlockedDirections(Vector2Int cell)
+    {
+        var blocked = CharMovement.DIRECTIONS.Where(
+            direction => IsBlocked(cell + CharMovement.GetDirectionVector2D(direction)));
+        return new HashSet<CharMovement.Direction>(blocked);
+    }
+
     public Vector2 GetCellPosition(Vector2Int cell)
     {
         return new Vector2(cell.x * cellSize, cell.y * cellSize);

@@ -5,10 +5,12 @@ using UnityEngine;
 public class AnimationControllerRandomizer : MonoBehaviour
 {
     public RuntimeAnimatorController[] controllers;
+    public int inx;
 
     void Awake()
     {
         var animator = GetComponent<Animator>();
-        animator.runtimeAnimatorController = controllers[Random.Range(0, controllers.Length)];
+        this.inx = Random.Range(0, controllers.Length);
+        animator.runtimeAnimatorController = controllers[inx];
     }
 }

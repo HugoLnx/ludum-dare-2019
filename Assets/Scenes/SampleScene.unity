@@ -10469,6 +10469,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hud: {fileID: 53714524}
+  animControllers:
+  - {fileID: 22100000, guid: 8026a67e4c3d81543a12239061d18cd7, type: 2}
+  - {fileID: 22100000, guid: 1efdbbabcee8d5e40b10579c6b22294f, type: 2}
+  - {fileID: 22100000, guid: 8d4e60428d72df049ba2715b87f0349b, type: 2}
 --- !u!61 &1783959571
 BoxCollider2D:
   m_ObjectHideFlags: 0

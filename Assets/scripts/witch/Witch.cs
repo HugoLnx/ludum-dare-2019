@@ -12,8 +12,11 @@ public class Witch : MonoBehaviour
     public int Score { get { return score; } private set { this.score = value < 0 ? 0 : value; } }
     public PlayerHUD hud;
     public ObjectScent Scent { get; private set; }
+    public RuntimeAnimatorController[] animControllers;
 
     private WitchSprite witchSprite;
+    private Animator animator;
+    private RuntimeAnimatorController originalController;
     private bool recovering = false;
 
     void Awake()
@@ -22,6 +25,8 @@ public class Witch : MonoBehaviour
         this.movement.WalkSpeed = 4f;
         this.Scent = GetComponent<ObjectScent>();
         this.witchSprite = GetComponentInChildren<WitchSprite>();
+        this.animator = GetComponentInChildren<Animator>();
+        this.originalController = animator.runtimeAnimatorController;
     }
 
     public bool BeingHit()
@@ -66,12 +71,16 @@ public class Witch : MonoBehaviour
         if (collision.CompareTag(Child.TAG) && !carryingChild)
         {
             this.carryingChild = true;
+            var child = collision.gameObject.GetComponent<Child>();
+            this.animator.runtimeAnimatorController = animControllers[child.ChildTypeInx];
+
             GameObject.Destroy(collision.gameObject);
         } else if (collision.CompareTag(Cauldron.TAG) && carryingChild)
         {
             this.carryingChild = false;
             this.Score += 1000;
             this.hud.SetScore(this.Score);
+            this.animator.runtimeAnimatorController = this.originalController;
         }
     }
 }

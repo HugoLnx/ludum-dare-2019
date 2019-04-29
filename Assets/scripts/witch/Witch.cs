@@ -13,18 +13,43 @@ public class Witch : MonoBehaviour
     public PlayerHUD hud;
     public ObjectScent Scent { get; private set; }
 
+    private WitchSprite witchSprite;
+    private bool recovering = false;
+
     void Awake()
     {
         this.movement = GetComponent<CharMovement>();
         this.movement.WalkSpeed = 4f;
         this.Scent = GetComponent<ObjectScent>();
+        this.witchSprite = GetComponentInChildren<WitchSprite>();
     }
 
-    public void Dead()
+    public bool BeingHit()
     {
+        if (recovering) return false;
         this.Score -= 731;
         this.hud.SetScore(this.Score);
+        this.recovering = true;
+        StartCoroutine(StartAnimation());
+        return true;
     }
+
+    private IEnumerator StartAnimation()
+    {
+        var invisible = new Color(1f, 1f, 1f, 0.5f);
+        var fadeOut = new ColorTransition(Color.white, invisible, ColorTransition.KEEP_VISIBLE_COLORS);
+        var fadeIn = new ColorTransition(invisible, Color.white, ColorTransition.KEEP_VISIBLE_COLORS);
+        var blinkDuration = 0.2f;
+        var blinkAnimations = new List<PremadeAnimation>();
+        for (var i = 0; i < 5; i++)
+        {
+            blinkAnimations.Add(new ColorTransitionAnimation(witchSprite, fadeOut, duration: blinkDuration));
+            blinkAnimations.Add(new ColorTransitionAnimation(witchSprite, fadeIn, duration: blinkDuration));
+        }
+        var animation = new AnimationChain(witchSprite, blinkAnimations).Start();
+        yield return new WaitUntil(() => animation.HasFinished);
+        this.recovering = false;
+     }
 
     void OnTriggerEnter2D(Collider2D collision)
     {

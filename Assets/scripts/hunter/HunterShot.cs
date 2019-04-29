@@ -43,8 +43,10 @@ public class HunterShot : MonoBehaviour
             if (!movement.Cell.Equals(this.grid.GetCellToSnap(this.transform.position))) return;
 
             var witch = collision.gameObject.GetComponent<Witch>();
-            witch.Dead();
-            GameObject.Destroy(this.gameObject);
+            if (witch.BeingHit())
+            {
+                GameObject.Destroy(this.gameObject);
+            }
         }
     }
 }

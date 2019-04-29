@@ -12,12 +12,12 @@ public class ColorTransitionAnimation : PremadeAnimation
     private float FRAME_DELAY = 1f / 30f; // 12 fps
     public float Progress { get; private set; }
     public bool HasFinished { get; private set; }
-    private TMP_Text[] texts;
+    private SpriteRenderer[] texts;
     private Action after;
 
     public ColorTransitionAnimation(MonoBehaviour obj, ColorTransition transition, float duration = 1f, bool noChildren = false, Action after = null)
     {
-        this.texts = noChildren ? new TMP_Text[] { obj.GetComponentInChildren<TMP_Text>() } : obj.GetComponentsInChildren<TMP_Text>();
+        this.texts = noChildren ? new SpriteRenderer[] { obj.GetComponentInChildren<SpriteRenderer>() } : obj.GetComponentsInChildren<SpriteRenderer>();
         this.Progress = 0f;
         this.HasFinished = false;
         this.duration = duration;

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8544847100662050454}
   - component: {fileID: 8544847100662050456}
   - component: {fileID: 8544847100662050455}
+  - component: {fileID: 2813541620833672093}
   m_Layer: 0
   m_Name: sprite
   m_TagString: Untagged
@@ -27,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 8544847100662050453}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0.05, z: 0}
-  m_LocalScale: {x: 0.6241326, y: 0.6241326, z: 0.6241326}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 8544847101119605680}
   m_RootOrder: 0
@@ -69,8 +70,8 @@ SpriteRenderer:
   m_SortingLayerID: 635131361
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 20aa3dfca3cc5f3408c3b637c28f5b83, type: 3}
-  m_Color: {r: 0.4764151, g: 0.8684133, b: 1, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 14880feb27250af4c98d9bd9d14d4cc5, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -90,7 +91,7 @@ Animator:
   m_GameObject: {fileID: 8544847100662050453}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 22100000, guid: 81e3cd20cb0226043aa37a281d45c3d8, type: 2}
+  m_Controller: {fileID: 22100000, guid: 218c5cb1f2fdc314382c43c4c2f21a4a, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -99,6 +100,22 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &2813541620833672093
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8544847100662050453}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08b326dd543d27644b2cd2712a7bc8b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  controllers:
+  - {fileID: 22100000, guid: d20e0d1332a7df940a8c5c89af50c32e, type: 2}
+  - {fileID: 22100000, guid: c3b531d360ad0a142b9bcb05cd274efb, type: 2}
+  - {fileID: 22100000, guid: 218c5cb1f2fdc314382c43c4c2f21a4a, type: 2}
 --- !u!1 &8544847101119605679
 GameObject:
   m_ObjectHideFlags: 0

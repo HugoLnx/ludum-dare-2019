@@ -12,6 +12,7 @@ public class BasicHunterAI : MonoBehaviour
     private State state;
     private CharMovement.Direction witchShotDirection;
     private WalkingGrid grid;
+    private HunterBang bang;
 
     enum State
     {
@@ -21,6 +22,7 @@ public class BasicHunterAI : MonoBehaviour
 
     void Awake()
     {
+        this.bang = GetComponentInChildren<HunterBang>();
         this.grid = GetComponentInParent<WalkingGrid>();
         this.witchScent = this.grid.Witches[0].Scent;
         this.cauldronScent = this.grid.Cauldron.Scent;
@@ -55,10 +57,14 @@ public class BasicHunterAI : MonoBehaviour
                     yield return new WaitWhile(() => steps == this.hunterMovement.Steps && !this.hunterMovement.MovementBlocked);
                     break;
                 case State.SHOOTING:
+                    this.hunterMovement.Stop();
+                    var anim = this.bang.Alert();
                     this.hunterMovement.TurnTo(this.witchShotDirection);
+                    yield return new WaitForSeconds(1f);
+                    yield return new WaitUntil(() => anim.HasFinished);
                     this.hunter.Shoot();
                     this.state = State.CHASING_CAULDRON;
-                    yield return new WaitForSeconds(1.5f);
+                    yield return new WaitForSeconds(1f);
                     break;
             }
             ChangeState();
@@ -80,9 +86,9 @@ public class BasicHunterAI : MonoBehaviour
         this.hunterMovement.Move(direction);
     }
 
-
-    private void ChangeState()
+    private bool ChangeState()
     {
+        var currentState = this.state;
         if (this.state != State.SHOOTING)
         {
             var shotDirection = this.hunterMovement.Sees(witchScent.CurrentCell.Value, raid: 6);
@@ -103,6 +109,8 @@ public class BasicHunterAI : MonoBehaviour
             }
 
         }
+        var changed = currentState != this.state;
+        return changed;
     }
     
 }

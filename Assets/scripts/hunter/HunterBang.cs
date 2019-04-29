@@ -9,11 +9,14 @@ public class HunterBang : MonoBehaviour
     private const float DURATION = 0.2f;
     private RectTransform rect;
     private TMP_Text text;
+    private WalkingGrid grid;
+    private SpriteRenderer srenderer;
 
     void Awake()
     {
         this.rect = GetComponentInChildren<RectTransform>();
         this.text = GetComponentInChildren<TMP_Text>();
+        this.grid = GetComponentInParent<WalkingGrid>();
     }
 
     void Start()

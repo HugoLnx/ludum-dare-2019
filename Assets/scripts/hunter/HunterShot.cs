@@ -21,6 +21,9 @@ public class HunterShot : MonoBehaviour
     {
         if (this.grid == null) return;
         this.transform.position += CharMovement.GetDirectionVector(direction) * SPEED * Time.deltaTime;
+        var p = this.transform.position;
+        var cell = this.grid.GetCellToSnap(this.transform.position);
+        this.transform.position = new Vector3(p.x, p.y, 100 + cell.y);
     }
 
     void OnTriggerEnter2D(Collider2D collision)

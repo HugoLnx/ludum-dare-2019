@@ -11,11 +11,13 @@ public class Witch : MonoBehaviour
     private int score;
     public int Score { get { return score; } private set { this.score = value < 0 ? 0 : value; } }
     public PlayerHUD hud;
+    public ObjectScent Scent { get; private set; }
 
     void Awake()
     {
         this.movement = GetComponent<CharMovement>();
         this.movement.WalkSpeed = 4f;
+        this.Scent = GetComponent<ObjectScent>();
     }
 
     public void Dead()

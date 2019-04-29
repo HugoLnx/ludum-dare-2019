@@ -7,10 +7,11 @@ public class BasicHunterAI : MonoBehaviour
 {
     private HunterActions hunter;
     private CharMovement hunterMovement;
-    public ObjectScent witchScent;
-    public ObjectScent cauldronScent;
+    private ObjectScent witchScent;
+    private ObjectScent cauldronScent;
     private State state;
     private CharMovement.Direction witchShotDirection;
+    private WalkingGrid grid;
 
     enum State
     {
@@ -20,6 +21,9 @@ public class BasicHunterAI : MonoBehaviour
 
     void Awake()
     {
+        this.grid = GetComponentInParent<WalkingGrid>();
+        this.witchScent = this.grid.Witches[0].Scent;
+        this.cauldronScent = this.grid.Cauldron.Scent;
         this.hunter = GetComponent<HunterActions>();
         this.hunterMovement = GetComponent<CharMovement>();
     }

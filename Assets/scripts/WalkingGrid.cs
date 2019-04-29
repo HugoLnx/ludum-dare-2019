@@ -11,6 +11,14 @@ public class WalkingGrid : MonoBehaviour
     public GridLine linePrefab;
     public bool debug;
     private List<BlockingObject> blockingObjects = new List<BlockingObject>();
+    public Cauldron Cauldron {get; private set;}
+    public List<Witch> Witches { get; private set; }
+
+    void Awake()
+    {
+        this.Witches = new List<Witch>(this.GetComponentsInChildren<Witch>());
+        this.Cauldron = this.GetComponentInChildren<Cauldron>();
+    }
 
     void Start()
     {

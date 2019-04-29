@@ -7887,7 +7887,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: 4043597059086477362, guid: 74019f803be08f1468ddf9f62f8ab714, type: 3}
   delay: 30
-  firstSpawnDelay: 0
+  firstSpawnDelay: 10
 --- !u!1001 &1116544469
 PrefabInstance:
   m_ObjectHideFlags: 0

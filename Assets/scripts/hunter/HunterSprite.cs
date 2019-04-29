@@ -6,7 +6,7 @@ public class HunterSprite : MonoBehaviour
 {
     private const float DISTANCE = 0.15f;
     private const float DURATION = 0.1f;
-
+    
     public PremadeAnimation RunKnockback(CharMovement.Direction charDirection)
     {
         var forward = CharMovement.GetDirectionVector(charDirection);

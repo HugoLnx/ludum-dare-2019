@@ -7,6 +7,8 @@ using System.Linq;
 public class WalkingGrid : MonoBehaviour
 {
     private const int GRID_SIZE = 50;
+    private const int WIDTH = 25;
+    private const int HEIGHT = 11;
     public float cellSize;
     public GridLine linePrefab;
     public bool debug;
@@ -33,6 +35,16 @@ public class WalkingGrid : MonoBehaviour
                 horizontalLine.SetHorizontal(transform.position.x + offset + i * cellSize);
             }
         }
+    }
+
+    public Vector2Int ToClosestEdgeVector(Vector2Int cell)
+    {
+        //var deltaUp = new Vector2Int(cell.x, -HEIGHT / 2) - cell;
+        //var deltaDown = new Vector2Int(cell.x, HEIGHT / 2) - cell;
+        var deltaLeft = new Vector2Int(-WIDTH / 2, cell.y) - cell;
+        var deltaRight = new Vector2Int(WIDTH / 2, cell.y) - cell;
+
+        return new List<Vector2Int> { deltaLeft, deltaRight }.OrderBy(v => v.magnitude).First();
     }
 
     public void AddBlockingObject(BlockingObject blockingObject)

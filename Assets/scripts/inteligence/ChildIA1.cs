@@ -20,6 +20,12 @@ public class ChildIA1 : MonoBehaviour
 
     public IEnumerator StartAI()
     {
+        var jumpCell = this.grid.ToClosestEdgeVector(this.child.Cell) * 2;
+        var jumpOrigin2d = this.grid.GetCellPosition(jumpCell);
+        var jumpOrigin3d = new Vector3(jumpOrigin2d.x, jumpOrigin2d.y, this.transform.position.z);
+        this.child.TurnTo(jumpOrigin2d.x >= 0f ? CharMovement.Direction.LEFT : CharMovement.Direction.RIGHT);
+        var jump = new JumpAnimation(this.child, from: jumpOrigin3d, to: Vector2.zero).Start();
+        yield return new WaitUntil(() => jump.HasFinished);
         while (true)
         {
             for (var i = 0; i < 3; i++)

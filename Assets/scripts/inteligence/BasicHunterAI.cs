@@ -7,6 +7,7 @@ public class BasicHunterAI : MonoBehaviour
 {
     private HunterActions hunter;
     private CharMovement hunterMovement;
+    private HunterSprite hunterSprite;
     private ObjectScent witchScent;
     private ObjectScent cauldronScent;
     private State state;
@@ -28,6 +29,7 @@ public class BasicHunterAI : MonoBehaviour
         this.cauldronScent = this.grid.Cauldron.Scent;
         this.hunter = GetComponent<HunterActions>();
         this.hunterMovement = GetComponent<CharMovement>();
+        this.hunterSprite = GetComponentInChildren<HunterSprite>();
     }
 
     void Start()
@@ -39,6 +41,12 @@ public class BasicHunterAI : MonoBehaviour
 
     private IEnumerator StartIA()
     {
+        var jumpCell = this.grid.ToClosestEdgeVector(this.hunterMovement.Cell)*2;
+        var jumpOrigin2d = this.grid.GetCellPosition(jumpCell);
+        var jumpOrigin3d = new Vector3(jumpOrigin2d.x, jumpOrigin2d.y, this.transform.position.z);
+        this.hunterMovement.TurnTo(jumpOrigin2d.x >= 0f ? CharMovement.Direction.LEFT : CharMovement.Direction.RIGHT);
+        var jump = new JumpAnimation(this.hunterSprite, from: jumpOrigin3d, to: Vector2.zero).Start();
+        yield return new WaitUntil(() => jump.HasFinished);
         while (true)
         {
             var steps = this.hunterMovement.Steps;

@@ -138,6 +138,7 @@ public class CharMovement : MonoBehaviour
 
     void Update()
     {
+        UpdateAnimatorState();
         var closeToCellCenter = UpdateCell();
         if (!Snapping && closeToCellCenter && this.commitedToMovement)
         {
@@ -170,6 +171,19 @@ public class CharMovement : MonoBehaviour
         }
     }
 
+    private void UpdateAnimatorState()
+    {
+        var state = this.animator.GetCurrentAnimatorStateInfo(0);
+        this.animator.SetBool("right", false);
+        this.animator.SetBool("left", false);
+        this.animator.SetBool("down", false);
+        this.animator.SetBool("up", false);
+        var mustChange = !state.IsTag((Walking ? "walking" : "idle") + "-" + (DIRECTION_NAMES[HeadedDirection]));
+        this.animator.SetBool(DIRECTION_NAMES[HeadedDirection], true);
+        this.animator.SetBool("walking", (Walking ? true : false));
+        this.animator.SetBool("must-change", mustChange);
+    }
+
     public static Vector3 GetDirectionVector(Direction direction)
     {
         return DIRECTION_VECTORS[direction];
@@ -191,28 +205,20 @@ public class CharMovement : MonoBehaviour
         if (this.commitedToMovement || this.Snapping || (this.movingDirection.HasValue && this.movingDirection.Value == direction)) return;
         if (GetMotion(direction) != CurrentMotion) Snap(CurrentMotion);
 
-        this.animator.SetBool("is-idle", false);
         this.Steps = 0;
         this.MovementBlocked = false;
         this.scheduledStop = false;
         this.movingDirection = direction;
         this.HeadedDirection = direction;
-        this.animator.SetTrigger($"walk-{DIRECTION_NAMES[direction]}");
     }
 
     public void TurnTo(Direction direction)
-    {
+    {  
         Stop();
         this.HeadedDirection = direction;
-        StartCoroutine(PostponeTurnTo(direction));
 
     }
-    private IEnumerator PostponeTurnTo(Direction direction)
-    {
-        yield return new WaitForFixedUpdate();
-        this.animator.SetTrigger($"turn-to-{DIRECTION_NAMES[direction]}");
-    }
-
+    
     public void Stop()
     {
         if (!this.movingDirection.HasValue) return;
@@ -222,13 +228,11 @@ public class CharMovement : MonoBehaviour
             return;
         }
         this.Steps = 0;
-        this.animator.SetBool("is-idle", true);
 
         this.scheduledStop = false;
         var originalMotion = CurrentMotion;
         this.movingDirection = null;
         this.MovementBlocked = false;
-        this.animator.SetTrigger("idle");
         Snap(originalMotion);
     }
     
